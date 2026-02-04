@@ -1,0 +1,53 @@
+[
+  {
+    "id": "INC-2026-003",
+    "description": "sucide",
+    "analysis": {
+      "summary": "The incident description is insufficient to determine specific legal sections. Please provide more details.",
+      "sections": [],
+      "guidance": [
+        "Please visit the nearest police station for manual assistance."
+      ],
+      "riskLevel": "Low"
+    },
+    "type": "General Report",
+    "location": "Reported Online",
+    "time": "11:47 AM",
+    "date": "30/1/2026",
+    "status": "New"
+  },
+  {
+    "id": "INC-2026-002",
+    "description": "attempt to sucide",
+    "analysis": {
+      "summary": "The incident description is insufficient to determine specific legal sections. Please provide more details.",
+      "sections": [],
+      "guidance": [
+        "Please visit the nearest police station for manual assistance."
+      ],
+      "riskLevel": "Low"
+    },
+    "type": "General Report",
+    "location": "Reported Online",
+    "time": "11:46 AM",
+    "date": "30/1/2026",
+    "status": "New"
+  },
+  {
+    "id": "INC-2026-001",
+    "description": "mt to sucide\n",
+    "analysis": {
+      "summary": "The incident description is insufficient to determine specific legal sections. Please provide more details.",
+      "sections": [],
+      "guidance": [
+        "Please visit the nearest police station for manual assistance."
+      ],
+      "riskLevel": "Low"
+    },
+    "type": "General Report",
+    "location": "Reported Online",
+    "time": "11:46 AM",
+    "date": "30/1/2026",
+    "status": "New"
+  }
+]
