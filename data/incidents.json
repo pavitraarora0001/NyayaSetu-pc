@@ -1,5 +1,43 @@
 [
   {
+    "id": "INC-2026-010",
+    "description": "firing",
+    "analysis": {
+      "summary": "The incident description is insufficient to determine specific legal sections. Please provide more details.",
+      "sections": [],
+      "guidance": [
+        "Please visit the nearest police station for manual assistance."
+      ],
+      "riskLevel": "Low"
+    },
+    "type": "General Report",
+    "location": "Reported Online",
+    "time": "11:52 AM",
+    "date": "7/2/2026",
+    "metadata": {},
+    "status": "New",
+    "hidden": false
+  },
+  {
+    "id": "INC-2026-009",
+    "description": "firing bullets",
+    "analysis": {
+      "summary": "The incident description is insufficient to determine specific legal sections. Please provide more details.",
+      "sections": [],
+      "guidance": [
+        "Please visit the nearest police station for manual assistance."
+      ],
+      "riskLevel": "Low"
+    },
+    "type": "General Report",
+    "location": "Reported Online",
+    "time": "11:51 AM",
+    "date": "7/2/2026",
+    "metadata": {},
+    "status": "New",
+    "hidden": false
+  },
+  {
     "id": "INC-2026-008",
     "description": "SNATCHING",
     "analysis": {
@@ -16,7 +54,7 @@
     "date": "7/2/2026",
     "metadata": {},
     "status": "FIR Filed",
-    "hidden": false
+    "hidden": true
   },
   {
     "id": "INC-2026-007",
@@ -47,7 +85,7 @@
     "date": "7/2/2026",
     "metadata": {},
     "status": "FIR Filed",
-    "hidden": false
+    "hidden": true
   },
   {
     "id": "INC-2026-006",

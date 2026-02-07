@@ -192,24 +192,34 @@ export default function IncidentDetail({ params }: { params: Promise<{ id: strin
                             {analysis ? (
                                 <>
                                     <div className="mb-4">
-                                        <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.5rem' }}>Identified Codes</h3>
+                                        <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem' }}>Identified Legal Sections</h3>
                                         {analysis.sections.length > 0 ? (
-                                            <ul style={{ listStyle: 'none', padding: 0 }}>
-                                                {analysis.sections.map((sec, i) => (
-                                                    <li key={i} style={{
-                                                        background: '#eff6ff', border: '1px solid #bfdbfe', padding: '0.75rem', borderRadius: '6px', marginBottom: '0.5rem'
-                                                    }}>
-                                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', color: '#1e40af' }}>
-                                                            <span>{sec.section}</span>
-                                                            <span style={{ color: '#6b7280', fontSize: '0.9rem' }}>{sec.ipc_section}</span>
-                                                        </div>
-                                                        <div style={{ fontSize: '0.9rem' }}>{sec.description}</div>
-                                                        <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.25rem' }}>
-                                                            {sec.cognizable ? <span style={{ color: '#dc2626', fontWeight: 600 }}>Cognizable</span> : 'Non-Cognizable'} • {sec.bailable ? 'Bailable' : 'Non-Bailable'}
-                                                        </div>
-                                                    </li>
-                                                ))}
-                                            </ul>
+                                            <div style={{ overflowX: 'auto', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+                                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                                                    <thead style={{ background: '#f8fafc', textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
+                                                        <tr>
+                                                            <th style={{ padding: '0.75rem' }}>BNS Section</th>
+                                                            <th style={{ padding: '0.75rem' }}>IPC (Legacy)</th>
+                                                            <th style={{ padding: '0.75rem' }}>Offence</th>
+                                                            <th style={{ padding: '0.75rem' }}>Punishment</th>
+                                                            <th style={{ padding: '0.75rem' }}>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {analysis.sections.map((sec, i) => (
+                                                            <tr key={i} style={{ borderBottom: i === analysis.sections.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
+                                                                <td style={{ padding: '0.75rem', fontWeight: 700, color: '#1e40af' }}>{sec.section}</td>
+                                                                <td style={{ padding: '0.75rem', color: '#64748b', fontWeight: 500 }}>{sec.ipc_section}</td>
+                                                                <td style={{ padding: '0.75rem', fontWeight: 500 }}>{sec.description.split(" - ")[0]}</td>
+                                                                <td style={{ padding: '0.75rem', color: '#dc2626', fontWeight: 600 }}>{sec.punishment}</td>
+                                                                <td style={{ padding: '0.75rem', fontSize: '0.75rem', color: '#64748b' }}>
+                                                                    {sec.cognizable ? <span style={{ color: '#991b1b', backgroundColor: '#fee2e2', padding: '1px 4px', borderRadius: '4px' }}>Cognizable</span> : 'Non-Cog.'}
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         ) : (
                                             <p style={{ color: 'red' }}>No clear sections identified.</p>
                                         )}

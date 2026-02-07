@@ -2,11 +2,11 @@
 // app/police/create/page.tsx
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { analyzeIncident, AnalysisResult } from '@/lib/ai-logic';
-import { ArrowLeft, CheckCircle, FileText, Upload } from 'lucide-react';
+import { ArrowLeft, Calendar, CheckCircle, Clock, FileText, Upload } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -18,8 +18,6 @@ export default function ManualEntry() {
         complainantName: '',
         contactNumber: '',
         address: '',
-        incidentDate: '',
-        incidentTime: '',
         location: '',
         description: '',
         customSections: ''
@@ -35,23 +33,34 @@ export default function ManualEntry() {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // Step 1: Analyze
-    const handleAnalyze = async () => {
-        if (!formData.description.trim()) return;
-        setIsAnalyzing(true);
-        // Simulate delay
-        setTimeout(() => {
-            const result = analyzeIncident(formData.description);
-            setAnalysis(result);
+    // Auto-analyze description for sections (Debounced)
+    useEffect(() => {
+        if (!formData.description.trim()) {
+            setFormData(prev => ({ ...prev, customSections: '' }));
+            return;
+        }
 
-            // Auto-populate IPC sections
+        const timer = setTimeout(() => {
+            const result = analyzeIncident(formData.description);
             if (result.sections.length > 0) {
                 const ipcStrings = result.sections
                     .map(s => `${s.section} (${s.ipc_section})`)
                     .join(', ');
                 setFormData(prev => ({ ...prev, customSections: ipcStrings }));
             }
+        }, 800);
 
+        return () => clearTimeout(timer);
+    }, [formData.description]);
+
+    // Step 1: Analyze (Manual Trigger if needed)
+    const handleAnalyze = async () => {
+        if (!formData.description.trim()) return;
+        setIsAnalyzing(true);
+        // Simulate delay for manual analysis preview
+        setTimeout(() => {
+            const result = analyzeIncident(formData.description);
+            setAnalysis(result);
             setIsAnalyzing(false);
         }, 1000);
     };
@@ -69,8 +78,6 @@ export default function ManualEntry() {
                     metadata: {
                         complainant: formData.complainantName,
                         contact: formData.contactNumber,
-                        incidentDate: formData.incidentDate,
-                        incidentTime: formData.incidentTime,
                         location: formData.location
                     },
                     analysis,
@@ -140,26 +147,6 @@ export default function ManualEntry() {
                         {/* Section 2: Incident Details */}
                         <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: '#4b5563', borderBottom: '1px dashed #ddd', paddingBottom: '0.5rem' }}>2. Incident Information</h3>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-                            <div className="input-group">
-                                <label className="label">Date of Incident</label>
-                                <input
-                                    type="date"
-                                    name="incidentDate"
-                                    className="input"
-                                    value={formData.incidentDate}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="input-group">
-                                <label className="label">Time of Incident</label>
-                                <input
-                                    type="time"
-                                    name="incidentTime"
-                                    className="input"
-                                    value={formData.incidentTime}
-                                    onChange={handleChange}
-                                />
-                            </div>
                             <div className="input-group" style={{ gridColumn: 'span 2' }}>
                                 <label className="label">Place of Occurrence</label>
                                 <input
@@ -173,6 +160,35 @@ export default function ManualEntry() {
                             </div>
                             <div className="input-group" style={{ gridColumn: 'span 2' }}>
                                 <label className="label">Acts & Sections (IPC/BNS)</label>
+
+                                {formData.description && (
+                                    <div style={{ marginBottom: '1rem', overflowX: 'auto', border: '1px solid #e2e8f0', borderRadius: '8px', background: '#f8fafc' }}>
+                                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
+                                            <thead style={{ textAlign: 'left', background: '#f1f5f9', borderBottom: '1px solid #e2e8f0' }}>
+                                                <tr>
+                                                    <th style={{ padding: '0.5rem' }}>BNS</th>
+                                                    <th style={{ padding: '0.5rem' }}>IPC</th>
+                                                    <th style={{ padding: '0.5rem' }}>Offence</th>
+                                                    <th style={{ padding: '0.5rem' }}>Punishment</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {analyzeIncident(formData.description).sections.map((s, idx) => (
+                                                    <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                                                        <td style={{ padding: '0.5rem', fontWeight: 600, color: '#1e40af' }}>{s.section}</td>
+                                                        <td style={{ padding: '0.5rem', color: '#64748b' }}>{s.ipc_section}</td>
+                                                        <td style={{ padding: '0.5rem' }}>{s.description.split(" - ")[0]}</td>
+                                                        <td style={{ padding: '0.5rem', color: '#dc2626', fontWeight: 600 }}>{s.punishment}</td>
+                                                    </tr>
+                                                ))}
+                                                {analyzeIncident(formData.description).sections.length === 0 && (
+                                                    <tr><td colSpan={3} style={{ padding: '0.8rem', textAlign: 'center', color: '#94a3b8', fontStyle: 'italic' }}>Start typing description to see matches...</td></tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+
                                 <input
                                     type="text"
                                     name="customSections"
@@ -181,6 +197,7 @@ export default function ManualEntry() {
                                     value={formData.customSections || ''}
                                     onChange={handleChange}
                                 />
+                                <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>*Table above is auto-suggested. You can manually edit the text field.</p>
                             </div>
                         </div>
 
@@ -220,15 +237,32 @@ export default function ManualEntry() {
                                 <h3 style={{ fontSize: '1.1rem', color: 'var(--color-navy)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                     <CheckCircle size={18} color="green" /> Analysis Ready
                                 </h3>
-                                <div style={{ marginBottom: '0.5rem' }}>
-                                    <strong>Identified Offences:</strong>
-                                    <ul style={{ marginTop: '0.25rem', paddingLeft: '1.5rem' }}>
-                                        {analysis.sections.length > 0 ? analysis.sections.map((s, idx) => (
-                                            <li key={idx}>
-                                                {s.section} <span style={{ color: '#666' }}>({s.ipc_section})</span>
-                                            </li>
-                                        )) : <li>No specific section identified (General Complaint)</li>}
-                                    </ul>
+                                <div style={{ marginBottom: '1rem' }}>
+                                    <strong>Identified Legal Sections:</strong>
+                                    <div style={{ overflowX: 'auto', marginTop: '0.5rem', border: '1px solid #e2e8f0', borderRadius: '8px', background: 'white' }}>
+                                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                                            <thead style={{ background: '#f8fafc', textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
+                                                <tr>
+                                                    <th style={{ padding: '0.6rem' }}>BNS Section</th>
+                                                    <th style={{ padding: '0.6rem' }}>IPC Section</th>
+                                                    <th style={{ padding: '0.6rem' }}>Offence</th>
+                                                    <th style={{ padding: '0.6rem' }}>Punishment</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {analysis.sections.length > 0 ? analysis.sections.map((s, idx) => (
+                                                    <tr key={idx} style={{ borderBottom: idx === analysis.sections.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
+                                                        <td style={{ padding: '0.6rem', fontWeight: 600, color: '#1e40af' }}>{s.section}</td>
+                                                        <td style={{ padding: '0.6rem', color: '#64748b' }}>{s.ipc_section}</td>
+                                                        <td style={{ padding: '0.6rem' }}>{s.description.split(" - ")[0]}</td>
+                                                        <td style={{ padding: '0.6rem', color: '#dc2626', fontWeight: 600 }}>{s.punishment}</td>
+                                                    </tr>
+                                                )) : (
+                                                    <tr><td colSpan={3} style={{ padding: '1rem', textAlign: 'center', fontStyle: 'italic' }}>No sections identified</td></tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 <p><strong>Risk Level:</strong> {analysis.riskLevel}</p>
                             </div>

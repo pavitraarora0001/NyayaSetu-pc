@@ -187,19 +187,27 @@ export function analyzeIncident(text: string): AnalysisResult {
     // Determine Risk Level based on sections
     const isHighRisk = matchedSections.some(s => s.punishment.includes("7 years") || s.punishment.includes("life"));
 
-    // Generate Guidance
+    // Generate Guidance based on the set of matched sections
     const guidance = [
-        "This incident appears to be legally actionable.",
-        matchedSections.some(s => s.cognizable) ? "Since this is a cognizable offence, police are duty-bound to register an FIR." : "This may be a non-cognizable offence; police may record an NCR.",
+        matchedSections.length > 1
+            ? "Multiple potential offences have been identified in this report."
+            : "This incident appears to be legally actionable.",
+        matchedSections.some(s => s.cognizable)
+            ? "Since cognizable offence(s) are involved, police are duty-bound to register an FIR."
+            : "These may be non-cognizable offences; police may record an NCR.",
         "Preserve any digital or physical evidence immediately.",
-        "Visit your nearest police station to formally report this."
+        "A detailed statement for each identified offence should be recorded."
     ];
 
+    const uniqueDescriptions = Array.from(new Set(matchedSections.map(s => s.description.split(" - ")[0])));
+
     return {
-        summary: `Incident involves elements of ${matchedSections.map(s => s.description.split(" - ")[0]).join(", ")}.`,
+        summary: matchedSections.length > 1
+            ? `Incident involves multiple offences: ${uniqueDescriptions.join(", ")}.`
+            : `Incident involves elements of ${uniqueDescriptions[0]}.`,
         sections: matchedSections,
         guidance: guidance,
-        riskLevel: isHighRisk ? 'High' : 'Medium'
+        riskLevel: isHighRisk ? 'High' : (matchedSections.length > 2 ? 'High' : 'Medium')
     };
 }
 
@@ -253,8 +261,12 @@ export function generateFormalFIR(text: string, sections: LegalSection[], formDa
 
     if (sections.length > 0) {
         formalText += `LEGAL EVALUATION:\n`;
-        formalText += `The facts stated above prima-facie disclose the commission of a ${sections.some(s => s.cognizable) ? 'COGNIZABLE' : 'NON-COGNIZABLE'} offence. `;
-        formalText += `Specifically, the actions attract ${sections.map(s => s.description).join('; ')}.\n\n`;
+        formalText += `The collective facts stated above disclose the commission of ${sections.some(s => s.cognizable) ? 'COGNIZABLE' : 'NON-COGNIZABLE'} offence(s). `;
+        formalText += `The following legal sections are attracted based on the distinct criminal acts reported:\n`;
+        sections.forEach((s, i) => {
+            formalText += `   (${i + 1}) ${s.description} - Covered under ${s.section} (${s.ipc_section})\n`;
+        });
+        formalText += `\n`;
     }
 
     formalText += `9. ACTION TAKEN:\n`;

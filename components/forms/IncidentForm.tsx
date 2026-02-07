@@ -21,7 +21,6 @@ export default function IncidentForm() {
         setIsSubmitting(true);
 
         // 1. Run AI Analysis
-        // Simulate network delay for realism
         setTimeout(async () => {
             const aiResponse = analyzeIncident(description);
             setResult(aiResponse);
@@ -97,26 +96,28 @@ export default function IncidentForm() {
                 <div className="mt-4">
                     <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Applicable BNS Sections</h3>
                     {result.sections.length > 0 ? (
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
-                            <thead style={{ background: '#f0f0f5', textAlign: 'left' }}>
-                                <tr>
-                                    <th style={{ padding: '0.5rem' }}>BNS Section</th>
-                                    <th style={{ padding: '0.5rem' }}>IPC Ref (Legacy)</th>
-                                    <th style={{ padding: '0.5rem' }}>Description</th>
-                                    <th style={{ padding: '0.5rem' }}>Punishment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {result.sections.map((sec, idx) => (
-                                    <tr key={idx} style={{ borderBottom: '1px solid #ddd' }}>
-                                        <td style={{ padding: '0.5rem', fontWeight: 'bold', color: '#000080' }}>{sec.section}</td>
-                                        <td style={{ padding: '0.5rem', color: '#666', fontWeight: 500 }}>{sec.ipc_section || 'N/A'}</td>
-                                        <td style={{ padding: '0.5rem' }}>{sec.description}</td>
-                                        <td style={{ padding: '0.5rem' }}>{sec.punishment}</td>
+                        <div style={{ overflowX: 'auto', border: '1px solid #e2e8f0', borderRadius: '12px', marginTop: '1rem' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                                <thead style={{ background: '#f8fafc', textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
+                                    <tr>
+                                        <th style={{ padding: '0.8rem' }}>BNS Section</th>
+                                        <th style={{ padding: '0.8rem' }}>IPC Section</th>
+                                        <th style={{ padding: '0.8rem' }}>Offence</th>
+                                        <th style={{ padding: '0.8rem' }}>Punishment</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {result.sections.map((sec, idx) => (
+                                        <tr key={idx} style={{ borderBottom: idx === result.sections.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
+                                            <td style={{ padding: '0.8rem', fontWeight: 'bold', color: 'var(--color-navy)' }}>{sec.section}</td>
+                                            <td style={{ padding: '0.8rem', color: '#64748b', fontWeight: 500 }}>{sec.ipc_section}</td>
+                                            <td style={{ padding: '0.8rem' }}>{sec.description.split(" - ")[0]}</td>
+                                            <td style={{ padding: '0.8rem', color: '#dc2626', fontWeight: 600 }}>{sec.punishment}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     ) : (
                         <p style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>No specific sections identified based on current input.</p>
                     )}
@@ -175,11 +176,12 @@ export default function IncidentForm() {
         <div className="card">
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
-                    <label className="label">Describe the Incident</label>
+                    <label className="label">Describe the Incident / Occurrence</label>
                     <textarea
                         className="textarea"
-                        rows={6}
-                        placeholder="Please describe what happened in detail (e.g., I was walking in the market and someone snatched my phone)..."
+                        required
+                        placeholder="Please describe what happened in detail..."
+                        rows={4}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />

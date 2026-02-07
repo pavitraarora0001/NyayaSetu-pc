@@ -6,7 +6,17 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { Eye, FileText, AlertTriangle, Trash2, History, LayoutDashboard } from 'lucide-react';
+import {
+    AlertTriangle,
+    Clock,
+    Calendar,
+    Eye,
+    FileText,
+    Search,
+    Trash2,
+    History as HistoryIcon,
+    LayoutDashboard as LayoutDashboardIcon
+} from 'lucide-react';
 
 // Mock Data removed in favor of API
 // const MOCK_INCIDENTS = ...
@@ -93,7 +103,7 @@ export default function PoliceDashboard() {
                                 className="btn btn-secondary"
                                 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                             >
-                                {showHidden ? <><LayoutDashboard size={18} /> Active View</> : <><History size={18} /> View History</>}
+                                {showHidden ? <><LayoutDashboardIcon size={18} /> Active View</> : <><HistoryIcon size={18} /> View History</>}
                             </button>
                             <Link href="/police/create" style={{ textDecoration: 'none' }}>
                                 <div className="btn btn-primary">

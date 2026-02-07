@@ -1,3 +1,4 @@
+"use client";
 
 // app/public/page.tsx
 import Header from '@/components/layout/Header';
@@ -18,6 +19,34 @@ export default function PublicPage() {
                     </div>
 
                     <IncidentForm />
+
+                    {/* Case Tracking Section */}
+                    <div style={{ marginTop: '4rem', padding: '2rem', backgroundColor: '#f8fafc', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                            <h2 style={{ color: 'var(--color-navy)', fontSize: '1.5rem' }}>Track Your Case</h2>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                                Enter your Incident ID (INC-...) or FIR Number to check its current status.
+                            </p>
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.5rem', maxWidth: '500px', margin: '0 auto' }}>
+                            <input
+                                id="case-search-input"
+                                type="text"
+                                placeholder="e.g. INC-2026-001 or FIR/2026/001"
+                                className="textarea"
+                                style={{ height: 'auto', padding: '0.8rem', flex: 1 }}
+                            />
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => {
+                                    const val = (document.getElementById('case-search-input') as HTMLInputElement).value;
+                                    if (val) window.location.href = `/public/status/${val.replace(/\//g, '_')}`;
+                                }}
+                            >
+                                Track Case
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </main>
             <Footer />
