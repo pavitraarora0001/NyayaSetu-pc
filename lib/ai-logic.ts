@@ -202,3 +202,65 @@ export function analyzeIncident(text: string): AnalysisResult {
         riskLevel: isHighRisk ? 'High' : 'Medium'
     };
 }
+
+/**
+ * Transforms raw incident description into a formal legal narrative for an FIR.
+ * Follows the structure of Standard FIR Form No. 1.
+ */
+export function generateFormalFIR(text: string, sections: LegalSection[], formData?: any): string {
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const sectionList = sections.map(s => `${s.section} (${s.ipc_section})`).join(", ");
+
+    let formalText = `FIRST INFORMATION REPORT (Under Section 154 Cr.P.C.)\n`;
+    formalText += `(Standard Form No. 1 - Detailed AI Draft)\n`;
+    formalText += `======================================================================\n\n`;
+
+    formalText += `1. DISTRICT: [AS PER JURISDICTION]    P.S: [NEAREST STATION]\n`;
+    formalText += `   YEAR: ${new Date().getFullYear()}    FIR NO: [PENDING]    DATE: ${date}\n\n`;
+
+    formalText += `2. ACTS & SECTIONS:\n`;
+    formalText += `   - Primary Act: Bharatiya Nyaya Sanhita (BNS), 2023\n`;
+    formalText += `   - Sections: ${sectionList || "Under Review"}\n\n`;
+
+    formalText += `3. OCCURRENCE OF OFFENCE:\n`;
+    formalText += `   - Date/Time: Recorded as per incident metadata.\n`;
+    formalText += `   - Information Received at P.S.: ${date} at ${time}\n\n`;
+
+    formalText += `4. TYPE OF INFORMATION: Written / Digital Submission\n\n`;
+
+    formalText += `5. PLACE OF OCCURRENCE:\n`;
+    formalText += `   - Precise Location: ${formData?.placeOfOccurrence || "[AS PER INCIDENT REPORT]"}\n`;
+    formalText += `   - Distance from P.S.: ${formData?.distanceFromStation || "[TO BE VERIFIED]"}\n\n`;
+
+    formalText += `6. COMPLAINANT / INFORMANT DETAILS:\n`;
+    formalText += `   - Name: ${formData?.complainantName || "[AS PER KYC]"}\n`;
+    formalText += `   - Contact: ${formData?.complainantPhone || "[AS PER RECORD]"}\n\n`;
+
+    formalText += `7. DETAILS OF ACCUSED: [KNOWN / UNKNOWN / UNDER INVESTIGATION]\n\n`;
+
+    formalText += `8. CONTENTS OF FIR (Narrative Brief Facts):\n`;
+    formalText += `----------------------------------------------------------------------\n`;
+    formalText += `IT IS RESPECTFULLY SUBMITTED that the complainant ${formData?.complainantName ? `(Shri/Smt. ${formData.complainantName}) ` : ''}reports as follows:\n\n`;
+
+    // Formalizing the raw text
+    const formalizedNarrative = text.trim()
+        .replace(/^i /i, "The Informant ")
+        .replace(/ my /i, " their ")
+        .replace(/ me /i, " the Informant ");
+
+    formalText += `"${formalizedNarrative}"\n\n`;
+
+    if (sections.length > 0) {
+        formalText += `LEGAL EVALUATION:\n`;
+        formalText += `The facts stated above prima-facie disclose the commission of a ${sections.some(s => s.cognizable) ? 'COGNIZABLE' : 'NON-COGNIZABLE'} offence. `;
+        formalText += `Specifically, the actions attract ${sections.map(s => s.description).join('; ')}.\n\n`;
+    }
+
+    formalText += `9. ACTION TAKEN:\n`;
+    formalText += `   Since the above report reveals commission of offence(s) as mentioned at Item No. 2, the case is registered and investigation has been initiated.\n\n`;
+
+    formalText += `[AI GENERATED DRAFT - SUBJECT TO OFFICER VERIFICATION]`;
+
+    return formalText;
+}

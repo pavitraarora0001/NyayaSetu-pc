@@ -85,6 +85,12 @@ export async function PUT(request: Request) {
         }
 
         // Update fields
+        // Generate FIR Number if status is changed to 'FIR Filed'
+        if (body.status === 'FIR Filed' && !incidents[index].firNumber) {
+            const year = new Date().getFullYear();
+            body.firNumber = `FIR/${year}/${incidents[index].id.split('-').pop()}`;
+        }
+
         incidents[index] = { ...incidents[index], ...body };
         writeDB(incidents);
 
