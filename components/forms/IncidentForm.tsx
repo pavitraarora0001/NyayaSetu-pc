@@ -10,6 +10,9 @@ export default function IncidentForm() {
     const [description, setDescription] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [result, setResult] = useState<AnalysisResult | null>(null);
+    const [incidentId, setIncidentId] = useState<string | null>(null);
+    const [isRegistered, setIsRegistered] = useState(false);
+    const [isRegistering, setIsRegistering] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,7 +28,7 @@ export default function IncidentForm() {
 
             // 2. Save to "Backend" via API
             try {
-                await fetch('/api/incidents', {
+                const response = await fetch('/api/incidents', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -33,12 +36,40 @@ export default function IncidentForm() {
                         analysis: aiResponse
                     })
                 });
+                if (response.ok) {
+                    const data = await response.json();
+                    setIncidentId(data.id);
+                }
             } catch (err) {
                 console.error("Failed to save incident", err);
             }
 
             setIsSubmitting(false);
         }, 1500);
+    };
+
+    const handleRegisterCase = async () => {
+        if (!incidentId) return;
+        setIsRegistering(true);
+
+        try {
+            const resp = await fetch('/api/incidents', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: incidentId,
+                    status: 'FIR Filed'
+                })
+            });
+
+            if (resp.ok) {
+                setIsRegistered(true);
+            }
+        } catch (err) {
+            console.error("Failed to register case", err);
+        } finally {
+            setIsRegistering(false);
+        }
     };
 
     if (result) {
@@ -100,12 +131,42 @@ export default function IncidentForm() {
                     </ul>
                 </div>
 
-                <button
-                    onClick={() => { setResult(null); setDescription(''); }}
-                    className="btn btn-secondary mt-4 w-full"
-                >
-                    Report Another Incident
-                </button>
+                <div className="flex flex-col gap-3 mt-6">
+                    {!isRegistered ? (
+                        <button
+                            onClick={handleRegisterCase}
+                            className="btn btn-primary w-full"
+                            disabled={isRegistering || !incidentId}
+                            style={{ backgroundColor: '#059669', borderColor: '#059669' }}
+                        >
+                            {isRegistering ? 'Registering...' : 'Register a Case / FIR'}
+                        </button>
+                    ) : (
+                        <div style={{
+                            padding: '0.75rem',
+                            backgroundColor: '#ecfdf5',
+                            color: '#047857',
+                            borderRadius: '6px',
+                            textAlign: 'center',
+                            fontWeight: 'bold',
+                            border: '1px solid #10b981'
+                        }}>
+                            ✓ Case / FIR Registered Successfully
+                        </div>
+                    )}
+
+                    <button
+                        onClick={() => {
+                            setResult(null);
+                            setDescription('');
+                            setIsRegistered(false);
+                            setIncidentId(null);
+                        }}
+                        className="btn btn-secondary w-full"
+                    >
+                        Report Another Incident
+                    </button>
+                </div>
             </div>
         );
     }

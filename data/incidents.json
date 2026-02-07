@@ -1,5 +1,57 @@
 [
   {
+    "id": "INC-2026-006",
+    "description": "Manual API test for registration.",
+    "analysis": {},
+    "type": "General Report",
+    "location": "Reported Online",
+    "time": "10:48 AM",
+    "date": "7/2/2026",
+    "metadata": {},
+    "status": "FIR Filed"
+  },
+  {
+    "id": "INC-2026-005",
+    "description": "Automated test incident for registration button.",
+    "analysis": {},
+    "type": "General Report",
+    "location": "Reported Online",
+    "time": "10:48 AM",
+    "date": "7/2/2026",
+    "metadata": {},
+    "status": "New"
+  },
+  {
+    "id": "INC-2026-004",
+    "description": "incident of murder",
+    "analysis": {
+      "summary": "Incident involves elements of Murder.",
+      "sections": [
+        {
+          "section": "BNS 103(1)",
+          "ipc_section": "IPC 302",
+          "description": "Murder",
+          "punishment": "Death or life imprisonment",
+          "bailable": false,
+          "cognizable": true
+        }
+      ],
+      "guidance": [
+        "This incident appears to be legally actionable.",
+        "Since this is a cognizable offence, police are duty-bound to register an FIR.",
+        "Preserve any digital or physical evidence immediately.",
+        "Visit your nearest police station to formally report this."
+      ],
+      "riskLevel": "High"
+    },
+    "type": "Identified Offence",
+    "location": "Reported Online",
+    "time": "10:45 AM",
+    "date": "7/2/2026",
+    "metadata": {},
+    "status": "New"
+  },
+  {
     "id": "INC-2026-003",
     "description": "sucide",
     "analysis": {

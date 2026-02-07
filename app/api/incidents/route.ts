@@ -55,7 +55,8 @@ export async function POST(request: Request) {
             time: body.metadata?.incidentTime || new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
             date: body.metadata?.incidentDate || new Date().toLocaleDateString(),
             metadata: body.metadata || {}, // Save full metadata
-            status: body.status || 'New'
+            status: body.status || 'New',
+            hidden: false // Default to visible
         };
 
         incidents.unshift(newIncident); // Add to top
