@@ -123,6 +123,23 @@ export default function IncidentForm() {
                     )}
                 </div>
 
+                <div className="mt-4" style={{ background: '#e6f6ff', padding: '1rem', borderRadius: '8px', border: '1px solid #bae6ff' }}>
+                    <h3 style={{ color: '#003eb3', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Constitutional Safeguards</h3>
+                    {result.constitution.length > 0 ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            {result.constitution.map((art, idx) => (
+                                <div key={idx} style={{ background: 'white', padding: '0.75rem', borderRadius: '6px', border: '1px solid #91d5ff' }}>
+                                    <strong style={{ color: 'var(--color-navy)', display: 'block', fontSize: '0.9rem' }}>{art.id}: {art.title}</strong>
+                                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.85rem', color: '#4b5563' }}>{art.description}</p>
+                                    <span style={{ fontSize: '0.7rem', color: '#0050b3', background: '#e6f7ff', padding: '0.1rem 0.4rem', borderRadius: '4px', textTransform: 'uppercase', fontWeight: 'bold', marginTop: '0.4rem', display: 'inline-block' }}>{art.category}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p style={{ color: 'var(--text-secondary)', fontStyle: 'italic', fontSize: '0.9rem' }}>Constitutional articles will be cited based on report specifics.</p>
+                    )}
+                </div>
+
                 <div className="mt-4" style={{ background: '#e6fffa', padding: '1rem', borderRadius: '8px', border: '1px solid #b2f5ea' }}>
                     <h3 style={{ color: '#006d5c', fontSize: '1.1rem' }}>Procedural Guidance</h3>
                     <ul style={{ paddingLeft: '1.2rem', color: '#004d40' }}>

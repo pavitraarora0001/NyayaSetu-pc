@@ -10,12 +10,68 @@ export interface LegalSection {
     cognizable: boolean;
 }
 
+export interface ConstitutionalArticle {
+    id: string; // Article No
+    title: string;
+    description: string;
+    category: 'Fundamental Right' | 'Directive Principle' | 'Duty' | 'Jurisdictional';
+}
+
 export interface AnalysisResult {
     summary: string;
     sections: LegalSection[];
+    constitution: ConstitutionalArticle[];
     guidance: string[];
     riskLevel: 'Low' | 'Medium' | 'High';
 }
+
+const CONSTITUTION_DB: { keywords: string[]; article: ConstitutionalArticle }[] = [
+    {
+        keywords: ['life', 'liberty', 'personal', 'body', 'survival', 'safety', 'hurt', 'murder'],
+        article: {
+            id: "Article 21",
+            title: "Protection of Life and Personal Liberty",
+            description: "No person shall be deprived of his life or personal liberty except according to procedure established by law.",
+            category: 'Fundamental Right'
+        }
+    },
+    {
+        keywords: ['arrest', 'detained', 'police', 'grounds', 'lawyer', 'counsel', 'prisoner', 'custody'],
+        article: {
+            id: "Article 22",
+            title: "Protection against Arrest and Detention",
+            description: "Guarantees the right to be informed of grounds for arrest and right to consult/be defended by a legal practitioner.",
+            category: 'Fundamental Right'
+        }
+    },
+    {
+        keywords: ['equality', 'discrimination', 'equal', 'treated', 'biased', 'fair', 'grounds of religion', 'caste'],
+        article: {
+            id: "Article 14",
+            title: "Right to Equality",
+            description: "The State shall not deny to any person equality before the law or the equal protection of the laws.",
+            category: 'Fundamental Right'
+        }
+    },
+    {
+        keywords: ['legal aid', 'poor', 'help', 'court assistance', 'lawyer help', 'free'],
+        article: {
+            id: "Article 39A",
+            title: "Equal Justice and Free Legal Aid",
+            description: "The State shall provide free legal aid by suitable legislation or schemes to ensure opportunities for securing justice are not denied to any citizen.",
+            category: 'Directive Principle'
+        }
+    },
+    {
+        keywords: ['public property', 'violence', 'duty', 'responsibility', 'citizen', 'abide', 'stolen', 'broken'],
+        article: {
+            id: "Article 51A",
+            title: "Fundamental Duties",
+            description: "Lists duties of citizens, including safeguarding public property and abjuring violence.",
+            category: 'Duty'
+        }
+    }
+];
 
 const BNS_DB = [
     {
@@ -166,19 +222,34 @@ const BNS_DB = [
 export function analyzeIncident(text: string): AnalysisResult {
     const lowerText = text.toLowerCase();
     const matchedSections: LegalSection[] = [];
+    const matchedConstitution: ConstitutionalArticle[] = [];
 
-    // Keyword formulation
+    // 1. Criminal Law Analysis (BNS)
     BNS_DB.forEach(entry => {
         if (entry.keywords.some(k => lowerText.includes(k))) {
             matchedSections.push(entry.section);
         }
     });
 
+    // 2. Constitutional Safeguards Analysis
+    CONSTITUTION_DB.forEach(entry => {
+        if (entry.keywords.some(k => lowerText.includes(k))) {
+            matchedConstitution.push(entry.article);
+        }
+    });
+
+    // Default Article 39A for serious cases
+    const isSerious = matchedSections.some(s => s.punishment.includes("7 years") || s.punishment.includes("life"));
+    if (isSerious && !matchedConstitution.some(a => a.id === "Article 39A")) {
+        matchedConstitution.push(CONSTITUTION_DB.find(a => a.article.id === "Article 39A")!.article);
+    }
+
     // Default if no match
     if (matchedSections.length === 0) {
         return {
             summary: "The incident description is insufficient to determine specific legal sections. Please provide more details.",
             sections: [],
+            constitution: [],
             guidance: ["Please visit the nearest police station for manual assistance."],
             riskLevel: 'Low'
         };
@@ -206,6 +277,7 @@ export function analyzeIncident(text: string): AnalysisResult {
             ? `Incident involves multiple offences: ${uniqueDescriptions.join(", ")}.`
             : `Incident involves elements of ${uniqueDescriptions[0]}.`,
         sections: matchedSections,
+        constitution: matchedConstitution,
         guidance: guidance,
         riskLevel: isHighRisk ? 'High' : (matchedSections.length > 2 ? 'High' : 'Medium')
     };

@@ -264,6 +264,20 @@ export default function ManualEntry() {
                                         </table>
                                     </div>
                                 </div>
+
+                                <div style={{ marginBottom: '1.5rem', background: '#e6f6ff', padding: '1rem', borderRadius: '8px', border: '1px solid #bae6ff' }}>
+                                    <h4 style={{ color: '#003eb3', fontSize: '1rem', marginBottom: '0.5rem' }}>Constitutional Provisions</h4>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                        {analysis.constitution.map((art, idx) => (
+                                            <div key={idx} style={{ background: 'white', padding: '0.6rem', borderRadius: '6px', border: '1px solid #91d5ff', fontSize: '0.85rem' }}>
+                                                <strong style={{ color: 'var(--color-navy)' }}>{art.id}: {art.title}</strong>
+                                                <p style={{ margin: '0.2rem 0 0 0', color: '#64748b' }}>{art.description}</p>
+                                            </div>
+                                        ))}
+                                        {analysis.constitution.length === 0 && <p style={{ fontSize: '0.85rem', fontStyle: 'italic', color: '#64748b' }}>No direct Constitutional Articles identified.</p>}
+                                    </div>
+                                </div>
+
                                 <p><strong>Risk Level:</strong> {analysis.riskLevel}</p>
                             </div>
 
