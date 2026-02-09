@@ -1,5 +1,67 @@
 [
   {
+    "id": "INC-2026-011",
+    "description": "attempt to murder",
+    "analysis": {
+      "summary": "Incident involves multiple offences: Murder, Attempt to Murder.",
+      "sections": [
+        {
+          "section": "BNS 103(1)",
+          "ipc_section": "IPC 302",
+          "description": "Murder",
+          "punishment": "Death or life imprisonment",
+          "bailable": false,
+          "cognizable": true
+        },
+        {
+          "section": "BNS 109",
+          "ipc_section": "IPC 307",
+          "description": "Attempt to Murder",
+          "punishment": "Up to 10 years imprisonment (Life if hurt caused)",
+          "bailable": false,
+          "cognizable": true
+        }
+      ],
+      "constitution": [
+        {
+          "id": "Article 21",
+          "title": "Protection of Life and Personal Liberty",
+          "description": "No person shall be deprived of his life or personal liberty except according to procedure established by law.",
+          "category": "Fundamental Right"
+        },
+        {
+          "id": "Article 39A",
+          "title": "Equal Justice and Free Legal Aid",
+          "description": "The State shall provide free legal aid by suitable legislation or schemes to ensure opportunities for securing justice are not denied to any citizen.",
+          "category": "Directive Principle"
+        }
+      ],
+      "guidance": [
+        "Multiple potential offences have been identified in this report.",
+        "Since cognizable offence(s) are involved, police are duty-bound to register an FIR.",
+        "Preserve any digital or physical evidence immediately.",
+        "A detailed statement for each identified offence should be recorded."
+      ],
+      "riskLevel": "High"
+    },
+    "type": "Identified Offence",
+    "location": "Reported Online",
+    "time": "10:50 AM",
+    "date": "9/2/2026",
+    "metadata": {},
+    "status": "FIR Filed",
+    "hidden": false,
+    "firNumber": "FIR/2026/011",
+    "firData": {
+      "complainantName": "",
+      "complainantPhone": "",
+      "complainantAddress": "",
+      "placeOfOccurrence": "Reported Online",
+      "distanceFromStation": "",
+      "narrative": "FIRST INFORMATION REPORT (Under Section 154 Cr.P.C.)\n(Standard Form No. 1 - Detailed AI Draft)\n======================================================================\n\n1. DISTRICT: [AS PER JURISDICTION]    P.S: [NEAREST STATION]\n   YEAR: 2026    FIR NO: [PENDING]    DATE: 2/9/2026\n\n2. ACTS & SECTIONS:\n   - Primary Act: Bharatiya Nyaya Sanhita (BNS), 2023\n   - Sections: BNS 103(1) (IPC 302), BNS 109 (IPC 307)\n\n3. OCCURRENCE OF OFFENCE:\n   - Date/Time: Recorded as per incident metadata.\n   - Information Received at P.S.: 2/9/2026 at 10:53 AM\n\n4. TYPE OF INFORMATION: Written / Digital Submission\n\n5. PLACE OF OCCURRENCE:\n   - Precise Location: Reported Online\n   - Distance from P.S.: [TO BE VERIFIED]\n\n6. COMPLAINANT / INFORMANT DETAILS:\n   - Name: [AS PER KYC]\n   - Contact: [AS PER RECORD]\n\n7. DETAILS OF ACCUSED: [KNOWN / UNKNOWN / UNDER INVESTIGATION]\n\n8. CONTENTS OF FIR (Narrative Brief Facts):\n----------------------------------------------------------------------\nIT IS RESPECTFULLY SUBMITTED that the complainant reports as follows:\n\n\"attempt to murder\"\n\nLEGAL EVALUATION:\nThe collective facts stated above disclose the commission of COGNIZABLE offence(s). The following legal sections are attracted based on the distinct criminal acts reported:\n   (1) Murder - Covered under BNS 103(1) (IPC 302)\n   (2) Attempt to Murder - Covered under BNS 109 (IPC 307)\n\n9. ACTION TAKEN:\n   Since the above report reveals commission of offence(s) as mentioned at Item No. 2, the case is registered and investigation has been initiated.\n\n[AI GENERATED DRAFT - SUBJECT TO OFFICER VERIFICATION]"
+    }
+  },
+  {
     "id": "INC-2026-010",
     "description": "firing",
     "analysis": {
