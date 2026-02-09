@@ -50,7 +50,7 @@
     "date": "9/2/2026",
     "metadata": {},
     "status": "FIR Filed",
-    "hidden": false,
+    "hidden": true,
     "firNumber": "FIR/2026/011",
     "firData": {
       "complainantName": "",
